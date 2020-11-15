@@ -28,8 +28,9 @@ const (
 	EOF     = "EOF"
 
 	// Identifiers + literals
-	IDENT = "IDENT" // add, foobar, x, y, ...
-	INT   = "INT"
+	IDENT  = "IDENT" // add, foobar, x, y, ...
+	INT    = "INT"
+	STRING = "STRING"
 	// 1343456
 	// Operators
 	ASSIGN   = "="
@@ -47,6 +48,8 @@ const (
 	RPAREN    = ")"
 	LBRACE    = "{"
 	RBRACE    = "}"
+	LBRACKET  = "["
+	RBRACKET  = "]"
 	// Keywords
 	FUNCTION = "FUNCTION"
 	LET      = "LET"
@@ -58,4 +61,6 @@ const (
 
 	EQ     = "=="
 	NOT_EQ = "!="
+
+	COLON = ":"
 )
