@@ -74,6 +74,22 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return args[0]
 		}
 		return applyFunction(function, args)
+	case *ast.MethodExpression:
+		this := Eval(node.This, env)
+		if isError(this) {
+			return this
+		}
+
+		function := Eval(node.Function, env)
+		if isError(function) {
+			return function
+		}
+		args := evalExpressions(node.Arguments, env)
+		if len(args) == 1 && isError(args[0]) {
+			return args[0]
+		}
+		args = append([]object.Object{this}, args...)
+		return applyFunction(function, args)
 	case *ast.ArrayLiteral:
 		elements := evalExpressions(node.Elements, env)
 		if len(elements) == 1 && isError(elements[0]) {

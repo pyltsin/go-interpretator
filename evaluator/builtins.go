@@ -1,11 +1,26 @@
 package evaluator
 
 import (
+	"bufio"
 	"fmt"
 	"go-interpretator/object"
+	"os"
 )
 
 var builtins = map[string]*object.Builtin{
+	"read": &object.Builtin{
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 0 {
+				return newError("wrong number of arguments. got=%d, want=0",
+
+					len(args))
+			}
+			reader := bufio.NewReader(os.Stdin)
+			text, _ := reader.ReadString('\n')
+
+			return &object.String{Value: text}
+		},
+	},
 	"len": &object.Builtin{
 		Fn: func(args ...object.Object) object.Object {
 			if len(args) != 1 {

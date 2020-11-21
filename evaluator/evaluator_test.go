@@ -377,6 +377,27 @@ func TestArrayLiterals(t *testing.T) {
 	testIntegerObject(t, result.Elements[2], 6)
 }
 
+func TestMethodExpressions(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{
+			`"len".len()`,
+			3,
+		},
+	}
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+		integer, ok := tt.expected.(int)
+		if ok {
+			testIntegerObject(t, evaluated, int64(integer))
+		} else {
+			testNullObject(t, evaluated)
+		}
+	}
+}
+
 func TestArrayIndexExpressions(t *testing.T) {
 	tests := []struct {
 		input    string
@@ -421,6 +442,10 @@ func TestArrayIndexExpressions(t *testing.T) {
 		{
 			"[1, 2, 3][-1]",
 			nil,
+		},
+		{
+			"len.len()",
+			3,
 		},
 	}
 	for _, tt := range tests {

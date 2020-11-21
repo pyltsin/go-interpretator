@@ -29,6 +29,8 @@ if (5 < 10) {
 "foo bar"
 [1, 2];
 {"foo": "bar"}
+"test".len()
+test.len()
 `
 
 	tests := []struct {
@@ -122,6 +124,18 @@ if (5 < 10) {
 		{token.COLON, ":"},
 		{token.STRING, "bar"},
 		{token.RBRACE, "}"},
+		//	"test".len()
+		{token.STRING, "test"},
+		{token.DOT, "."},
+		{token.IDENT, "len"},
+		{token.LPAREN, "("},
+		{token.RPAREN, ")"},
+		//	test.len()
+		{token.IDENT, "test"},
+		{token.DOT, "."},
+		{token.IDENT, "len"},
+		{token.LPAREN, "("},
+		{token.RPAREN, ")"},
 		{token.EOF, ""},
 	}
 

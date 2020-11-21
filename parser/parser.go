@@ -17,6 +17,7 @@ const (
 	PRODUCT
 	PREFIX
 	CALL
+	DOT
 	INDEX
 )
 
@@ -64,6 +65,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.LBRACKET, p.parseArrayLiteral)
 	p.registerInfix(token.LBRACKET, p.parseIndexExpression)
 	p.registerPrefix(token.LBRACE, p.parseHashLiteral)
+	p.registerInfix(token.DOT, p.parseMethodExpression)
 
 	p.nextToken()
 	p.nextToken()
@@ -301,6 +303,7 @@ var precedences = map[token.TokenType]int{
 	token.ASTERISK: PRODUCT,
 	token.LPAREN:   CALL,
 	token.LBRACKET: INDEX,
+	token.DOT:      DOT,
 }
 
 func (p *Parser) peekPrecedence() int {
@@ -464,4 +467,26 @@ func (p *Parser) parseIndexExpression(left ast.Expression) ast.Expression {
 		return nil
 	}
 	return exp
+}
+
+func (p *Parser) parseMethodExpression(this ast.Expression) ast.Expression {
+
+	defer untrace(trace("parseMethodExpression"))
+
+	expression := &ast.MethodExpression{
+		Token:     p.curToken,
+		This:      this,
+		Arguments: nil,
+		Function:  nil,
+	}
+
+	if !p.expectPeek(token.IDENT) {
+		return nil
+	}
+	expression.Function = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+
+	p.nextToken()
+	expression.Arguments = p.parseExpressionList(token.RPAREN)
+
+	return expression
 }

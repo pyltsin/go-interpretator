@@ -306,3 +306,28 @@ func (hl *HashLiteral) String() string {
 	out.WriteString("}")
 	return out.String()
 }
+
+type MethodExpression struct {
+	Token    token.Token // The '.' token
+	Function *Identifier
+	// Identifier or FunctionLiteral
+	Arguments []Expression
+	This      Expression
+}
+
+func (ce *MethodExpression) expressionNode()      {}
+func (ce *MethodExpression) TokenLiteral() string { return ce.Token.Literal }
+func (ce *MethodExpression) String() string {
+	var out bytes.Buffer
+	args := []string{}
+	for _, a := range ce.Arguments {
+		args = append(args, a.String())
+	}
+	out.WriteString(ce.This.String())
+	out.WriteString(".")
+	out.WriteString(ce.Function.String())
+	out.WriteString("(")
+	out.WriteString(strings.Join(args, ", "))
+	out.WriteString(")")
+	return out.String()
+}

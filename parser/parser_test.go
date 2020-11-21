@@ -922,6 +922,26 @@ func TestParsingEmptyHashLiteral(t *testing.T) {
 	}
 }
 
+func TestMethod(t *testing.T) {
+	input := "a.method(1, 1+2)"
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+	if len(program.Statements) != 1 {
+		t.Errorf("many parse")
+	}
+	stmt := program.Statements[0].(*ast.ExpressionStatement)
+	method, ok := stmt.Expression.(*ast.MethodExpression)
+	if !ok {
+		t.Fatalf("exp is not ast.MethodExpression. got=%T", stmt.Expression)
+	}
+
+	if method.String() != "a.method(1, (1 + 2))" {
+		t.Fatalf("exp is a.method(1, (1 + 2)). got=%T", method.String())
+	}
+}
+
 func TestParsingHashLiteralsWithExpressions(t *testing.T) {
 	input := `{"one": 0 + 1, "two": 10 - 8, "three": 15 / 5}`
 	l := lexer.New(input)

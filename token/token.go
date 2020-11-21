@@ -63,4 +63,5 @@ const (
 	NOT_EQ = "!="
 
 	COLON = ":"
+	DOT   = "."
 )
